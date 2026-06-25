@@ -16,18 +16,20 @@ def add_gratitude():
     today = date.today()
 
     # Ask the user for gratitude entries
-    gratitude1 = input("Enter thing #1 you are grateful for: ")
-    gratitude2 = input("Enter thing #2 you are grateful for: ")
-    gratitude3 = input("Enter thing #3 you are grateful for: ")
+    gratitudes = []
+
+    gratitudes.append(input("Enter thing #1: "))
+    gratitudes.append(input("Enter thing #2: "))
+    gratitudes.append(input("Enter thing #3: "))
 
     # Open file in append mode
     file = open("gratitude.txt", "a")
 
     # Write data to file
     file.write(f"Date: {today}\n")
-    file.write(f"1. {gratitude1}\n")
-    file.write(f"2. {gratitude2}\n")
-    file.write(f"3. {gratitude3}\n")
+    file.write(f"1. {gratitudes[0]}\n")
+    file.write(f"2. {gratitudes[1]}\n")
+    file.write(f"3. {gratitudes[2]}\n")
     file.write("---------------------------------\n\n")
 
     # Close file
