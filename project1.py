@@ -1,109 +1,103 @@
-# ==============================================================
-# Gratitude Journal - Version 4
-# Author: Amarjot
-#
-# Description:
-# This program allows the user to:
-# 1. Add daily gratitude entries
-# 2. View previous gratitude entries
-# 3. Exit the program
-#
-# New Concept Learned:
-# - Lists
-# - append()
-# - List indexing
-# ==============================================================
-
-# Import the date class so we can get today's date
 from datetime import date
 
 
-# ==============================================================
-# Function: Add Gratitude
-# ==============================================================
 def add_gratitude():
-
-    # Get today's date
     today = date.today()
 
-    # Create an empty list to store gratitude entries
     gratitudes = []
 
-    # Ask the user for three gratitude entries
-    gratitudes.append(input("Enter thing #1 you are grateful for: "))
-    gratitudes.append(input("Enter thing #2 you are grateful for: "))
-    gratitudes.append(input("Enter thing #3 you are grateful for: "))
+    for number in range(1, 4):
+        gratitude = input(f"Enter thing #{number} you are grateful for: ")
+        gratitudes.append(gratitude)
 
-    # Open the file in append mode
-    file = open("gratitude.txt", "a")
+    with open("gratitude.txt", "a") as file:
+        file.write(f"\nDate: {today}\n")
 
-    # Write today's date
-    file.write(f"Date: {today}\n")
+        for index, item in enumerate(gratitudes, start=1):
+            file.write(f"{index}. {item}\n")
 
-    # Write each gratitude entry
-    file.write(f"1. {gratitudes[0]}\n")
-    file.write(f"2. {gratitudes[1]}\n")
-    file.write(f"3. {gratitudes[2]}\n")
-
-    # Add a separator between journal entries
-    file.write("--------------------------------------\n\n")
-
-    # Close the file
-    file.close()
+        file.write("-" * 40 + "\n")
 
     print("\nGratitude saved successfully!\n")
 
 
-# ==============================================================
-# Function: View Previous Entries
-# ==============================================================
 def view_entries():
+    try:
+        with open("gratitude.txt", "r") as file:
+            content = file.read()
 
-    # Open the file in read mode
-    file = open("gratitude.txt", "r")
+        print("\n===== Gratitude Journal =====")
+        print(content)
 
-    # Read the entire file
-    content = file.read()
-
-    # Display the content
-    print("\n===== Your Gratitude Journal =====")
-    print(content)
-
-    # Close the file
-    file.close()
+    except FileNotFoundError:
+        print("\nNo gratitude entries found.\n")
 
 
-# ==============================================================
-# Main Program
-# ==============================================================
+def search_entries():
+    keyword = input("Enter a word to search: ")
 
-# This variable controls whether the program keeps running
-running = True
+    try:
+        with open("gratitude.txt", "r") as file:
+            lines = file.readlines()
 
-# Keep showing the menu until the user chooses Exit
-while running:
+        found = False
 
-    print("========== Gratitude Journal ==========")
+        print("\nSearch Results:\n")
+
+        for line in lines:
+            if keyword.lower() in line.lower():
+                print(line.strip())
+                found = True
+
+        if not found:
+            print("No matching entries found.")
+
+    except FileNotFoundError:
+        print("\nNo gratitude entries found.\n")
+
+
+def total_entries():
+    try:
+        with open("gratitude.txt", "r") as file:
+            count = 0
+
+            for line in file:
+                if line.startswith("Date:"):
+                    count += 1
+
+        print(f"\nTotal Journal Entries: {count}\n")
+
+    except FileNotFoundError:
+        print("\nTotal Journal Entries: 0\n")
+
+
+while True:
+
+    print("\n========== GRATITUDE JOURNAL ==========")
     print("1. Add Gratitude")
     print("2. View Previous Entries")
-    print("3. Exit")
-    print("======================================")
+    print("3. Search Gratitude")
+    print("4. Total Entries")
+    print("5. Exit")
+    print("=======================================")
 
     choice = input("Choose an option: ")
 
-    # If user chooses option 1
     if choice == "1":
         add_gratitude()
 
-    # If user chooses option 2
     elif choice == "2":
         view_entries()
 
-    # If user chooses option 3
     elif choice == "3":
-        print("\nThank you for using Gratitude Journal!")
-        running = False
+        search_entries()
 
-    # If user enters anything else
+    elif choice == "4":
+        total_entries()
+
+    elif choice == "5":
+        print("\nThank you for using Gratitude Journal!")
+        break
+
     else:
         print("\nInvalid choice! Please try again.\n")
